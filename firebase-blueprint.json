@@ -1,0 +1,37 @@
+{
+  "entities": {
+    "StudentScore": {
+      "title": "Student Score",
+      "description": "Leaderboard score record for each student",
+      "type": "object",
+      "properties": {
+        "nickname": {
+          "type": "string",
+          "maxLength": 50,
+          "pattern": "^[a-zA-Z0-9_\\-\\uAC00-\\uD7A3]+$"
+        },
+        "score": {
+          "type": "number"
+        },
+        "stars": {
+          "type": "number"
+        },
+        "badges": {
+          "type": "array"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      },
+      "required": ["nickname", "score", "stars", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/scores/{nickname}": {
+      "schema": {
+        "$ref": "#/entities/StudentScore"
+      },
+      "description": "Student leaderboard scores collection"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 64;
+    }
+
+    function isValidScore(data) {
+      return data.keys().hasAll(['nickname', 'score', 'stars', 'updatedAt']) &&
+             data.nickname is string && data.nickname.size() <= 50 &&
+             data.score is number && data.score >= 0 &&
+             data.stars is number && data.stars >= 0 &&
+             data.updatedAt is string;
+    }
+
+    match /scores/{nickname} {
+      allow read: if true;
+      allow create, update: if isValidId(nickname) && isValidScore(request.resource.data) && request.resource.data.nickname == nickname;
+      allow delete: if false;
+    }
+  }
+}
